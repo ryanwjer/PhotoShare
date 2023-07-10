@@ -5,60 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Share your pictures with the newlyweds!</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      padding: 1rem;
-      background-color: #d3e5d7;
-    }
-    h1 {
-      margin-bottom: 2rem;
-      text-align: center;
-      color: black;
-    }
-    p {
+    /* ...original CSS code... */
+    /* Added warning message style */
+    .warning {
+      color: #ff0000;
+      font-weight: bold;
       text-align: center;
       margin-bottom: 0.5rem;
-      color: black;
-    }
-    .step {
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    input[type="file"],
-    input[type="submit"],
-    label[for="file"] {
-      font-size: 1.5rem;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      background-color: white;
-      color: black;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    label[for="file"] {
-      font-size: 1.5rem;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      background-color: white;
-      color: black;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-    }
-    #file {
-      display: none;
-    }
-    label[for="upload"] {
-      background-color: transparent;
-      color: inherit;
-      cursor: inherit;
     }
   </style>
 </head>
@@ -67,6 +20,7 @@
   <p>Just follow this step by step guide below and upload all the photos you took today to help Kristen & Ryan remember this amazing day!</p>
   <form action="/" method="POST" enctype="multipart/form-data">
     <div class="step">
+      <p class="warning">* Please select only photo files (.jpg, .png, etc). Videos are not supported.</p>
       <p>Step # 1: Pick'm!</p>
       <label for="file">Choose Files</label>
       <input type="file" id="file" name="file" multiple onchange="this.nextElementSibling.innerText = 'Selected Files: ' + this.files.length" />
@@ -89,38 +43,21 @@
         return;
       }
 
+      // Check that all files are images
+      for (let i = 0; i < files.length; i++) {
+        if (!files[i].type.startsWith('image/')) {
+          alert('Only images can be uploaded. Please remove any non-image files and try again.');
+          return;
+        }
+      }
+
       const formData = new FormData();
       for (let i = 0; i < files.length; i++) {
         formData.append('file', files[i]);
       }
 
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/', true);
-
-      xhr.upload.addEventListener('progress', function (event) {
-        if (event.lengthComputable) {
-          const percentComplete = Math.round((event.loaded / event.total) * 100);
-          document.getElementById('uploadProgress').value = percentComplete;
-          document.getElementById('uploadProgress').style.display = 'block';
-          document.getElementById('uploadStatus').style.display = 'block';
-        }
-      });
-
-      xhr.addEventListener('load', function (event) {
-        if (xhr.status === 200) {
-          window.location.href = '/success';
-        } else {
-          alert('An error occurred while uploading the files. Please try again.');
-        }
-      });
-
-      xhr.addEventListener('error', function (event) {
-        alert('An error occurred while uploading the files. Please try again.');
-      });
-
-      xhr.send(formData);
+      /* ...rest of your JavaScript code... */
     });
   </script>
 </body>
 </html>
-
